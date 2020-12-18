@@ -56,6 +56,9 @@ endfunction
 
 function! <SID>SetMainWindow()
     let l:main_winnr = <SID>GetMainWindow()
+    if l:main_winnr == winnr()
+        return
+    endif
     let l:main_winsize = g:my_screen_width / 10 * 7
     " echom "main window: " . l:main_winnr
     " echom "main window size: " . string(l:main_winsize)
