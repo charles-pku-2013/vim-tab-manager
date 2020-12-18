@@ -38,6 +38,53 @@ function! <SID>CloseDup()
     endwhile
 endfunction
 
-command Cdt call <SID>CloseDup()
+" Close duplicate window
+command Cdw call <SID>CloseDup()
 
+function! <SID>GetMainWindow()
+    let l:main_winnr = 1
+    let l:win_list = range(1, winnr("$"))
+    for winnr in l:win_list
+        let l:bufnr = winbufnr(winnr)
+        if (bufloaded(l:bufnr) && buflisted(l:bufnr))
+            let l:main_winnr = winnr
+            break
+        endif
+    endfor
+    return l:main_winnr
+endfunction
+
+function! <SID>SetMainWindow()
+    let l:main_winnr = <SID>GetMainWindow()
+    let l:main_winsize = g:my_screen_width / 5 * 4
+    " echom "main window: " . l:main_winnr
+    " echom "main window size: " . l:main_winsize
+    " exchange current content with main window
+    execute l:main_winnr . "wincmd x"
+    " goto main window
+    execute l:main_winnr . "wincmd w"
+    " resize main window
+    execute "vertical res " . l:main_winsize
+    call feedkeys("^")
+    " let l:last_winnr = winnr('$')
+    " if l:main_winnr == l:last_winnr
+        " return
+    " endif
+    " let l:win_list = range(l:main_winnr + 1, l:last_winnr)
+    " echom "Adjusting list: " . string(l:win_list)
+    " for winnr in l:win_list
+        " echom "Adjusting " . winnr
+        " execute "vertical " . winnr . "res 0"
+    " endfor
+endfunction
+
+function! <SID>ExchangeMainWindow()
+    execute "wincmd p"
+    call feedkeys("\<C-m>")
+endfunction
+
+command Main call <SID>SetMainWindow()
+command ExchangeMain call <SID>ExchangeMainWindow()
+nnoremap <silent> <C-m> :Main<CR>
+nnoremap <silent> <C-x> :ExchangeMain<CR>
 
