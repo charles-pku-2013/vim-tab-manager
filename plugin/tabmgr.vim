@@ -86,5 +86,6 @@ endfunction
 command Main call <SID>SetMainWindow()
 command ExchangeMain call <SID>ExchangeMainWindow()
 nnoremap <silent> <C-m> :Main<CR>
-nnoremap <silent> <C-x> :ExchangeMain<CR>
+" Alt - m
+nnoremap <silent> µ :ExchangeMain<CR>
 
