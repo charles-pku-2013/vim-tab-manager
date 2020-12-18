@@ -56,9 +56,9 @@ endfunction
 
 function! <SID>SetMainWindow()
     let l:main_winnr = <SID>GetMainWindow()
-    let l:main_winsize = g:my_screen_width / 5 * 4
+    let l:main_winsize = g:my_screen_width / 10 * 7
     " echom "main window: " . l:main_winnr
-    " echom "main window size: " . l:main_winsize
+    " echom "main window size: " . string(l:main_winsize)
     " exchange current content with main window
     execute l:main_winnr . "wincmd x"
     " goto main window
