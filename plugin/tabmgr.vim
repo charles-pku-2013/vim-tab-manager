@@ -44,10 +44,10 @@ command Cdw call <SID>CloseDup()
 function! <SID>GetMainWindow()
     let l:main_winnr = 1
     let l:win_list = range(1, winnr("$"))
-    for winnr in l:win_list
-        let l:bufnr = winbufnr(winnr)
+    for window_number in l:win_list
+        let l:bufnr = winbufnr(window_number)
         if (bufloaded(l:bufnr) && buflisted(l:bufnr))
-            let l:main_winnr = winnr
+            let l:main_winnr = window_number
             break
         endif
     endfor
@@ -56,7 +56,7 @@ endfunction
 
 function! <SID>SetMainWindow()
     let l:main_winnr = <SID>GetMainWindow()
-    if l:main_winnr == winnr()
+    if l:main_winnr == winnr('$')
         return
     endif
     let l:main_winsize = g:my_screen_width / 10 * 7
@@ -75,20 +75,21 @@ function! <SID>SetMainWindow()
     " endif
     " let l:win_list = range(l:main_winnr + 1, l:last_winnr)
     " echom "Adjusting list: " . string(l:win_list)
-    " for winnr in l:win_list
-        " echom "Adjusting " . winnr
-        " execute "vertical " . winnr . "res 0"
+    " for window_number in l:win_list
+        " echom "Adjusting " . window_number
+        " execute "vertical " . window_number . "res 0"
     " endfor
 endfunction
 
 function! <SID>ExchangeMainWindow()
     execute "wincmd p"
-    call feedkeys("\<C-m>")
+    call <SID>SetMainWindow()
 endfunction
 
 command Main call <SID>SetMainWindow()
 command ExchangeMain call <SID>ExchangeMainWindow()
-nnoremap <silent> <C-m> :Main<CR>
-" Alt - m
-nnoremap <silent> µ :ExchangeMain<CR>
+" Alt -m
+nnoremap <silent> µ :Main<CR>
+" Shift - Alt - m
+nnoremap <silent> Â :ExchangeMain<CR>
 
