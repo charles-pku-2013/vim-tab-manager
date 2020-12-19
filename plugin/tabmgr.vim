@@ -59,7 +59,7 @@ function! <SID>SetMainWindow()
     if l:main_winnr == winnr('$')
         return
     endif
-    let l:main_winsize = g:my_screen_width / 10 * 7
+    let l:main_winsize = g:my_screen_width / 4 * 3
     " echom "main window: " . l:main_winnr
     " echom "main window size: " . string(l:main_winsize)
     " exchange current content with main window
