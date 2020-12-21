@@ -102,3 +102,32 @@ nnoremap <silent> Â :ExchangeMain<CR>
 " Alt - x
 nnoremap <silent> ≈ :call<SID>ExchangeWindow()<CR>
 
+
+function! <SID>MoveWindowToNextTab()
+    let l:fname = expand('%')
+    echom "fname: " . l:fname
+    execute "tabnext"
+    execute "vs " . l:fname
+    execute "tabprevious"
+    execute "q"
+    if expand('%') != l:fname
+        execute "tabnext"
+    endif
+endfunction
+" Alt + 右小括号
+nnoremap <silent> ‚ :call<SID>MoveWindowToNextTab()<CR>
+
+function! <SID>MoveWindowToPrevTab()
+    let l:fname = expand('%')
+    echom "fname: " . l:fname
+    execute "tabprevious"
+    execute "vs " . l:fname
+    execute "tabnext"
+    execute "q"
+    if expand('%') != l:fname
+        execute "tabprevious"
+    endif
+endfunction
+" Alt + 左小括号
+nnoremap <silent> · :call<SID>MoveWindowToPrevTab()<CR>
+
