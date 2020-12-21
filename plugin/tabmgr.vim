@@ -86,10 +86,19 @@ function! <SID>ExchangeMainWindow()
     call <SID>SetMainWindow()
 endfunction
 
+function! <SID>ExchangeWindow()
+    let l:cur_winwidth = winwidth(winnr())
+    execute "wincmd x"
+    execute "vertical res " . l:cur_winwidth
+    call feedkeys("^")
+endfunction
+
 command Main call <SID>SetMainWindow()
 command ExchangeMain call <SID>ExchangeMainWindow()
 " Alt -m
 nnoremap <silent> µ :Main<CR>
 " Shift - Alt - m
 nnoremap <silent> Â :ExchangeMain<CR>
+" Alt - x
+nnoremap <silent> ≈ :call<SID>ExchangeWindow()<CR>
 
