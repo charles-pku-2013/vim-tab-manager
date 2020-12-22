@@ -132,8 +132,8 @@ endfunction
 " Alt + 左小括号
 nnoremap <silent> · :call<SID>MoveWindowToPrevTab()<CR>
 
-function! <SID>TabBufOnly()
-    let l:fname = expand('%')
+function! <SID>TabBufOnlyHelper(file)
+    let l:fname = a:file
     let l:win_list = range(1, winnr("$"))
     for window_number in l:win_list
         let l:bufnr = winbufnr(window_number)
@@ -141,9 +141,17 @@ function! <SID>TabBufOnly()
             execute window_number . "wincmd w"
             if expand('%') != l:fname
                 execute "q"
+                return 1
             endif
         endif
     endfor
+    return 0
+endfunction
+
+function! <SID>TabBufOnly()
+    let l:fname = expand('%')
+    while <SID>TabBufOnlyHelper(l:fname)
+    endwhile
 endfunction
 
 command! TabBufOnly call <SID>TabBufOnly()
