@@ -106,7 +106,7 @@ nnoremap <silent> ≈ :call<SID>ExchangeWindow()<CR>
 
 function! <SID>MoveWindowToNextTab()
     let l:fname = expand('%')
-    echom "fname: " . l:fname
+    " echom "fname: " . l:fname
     execute "tabnext"
     execute "vs " . l:fname
     execute "tabprevious"
@@ -120,7 +120,7 @@ nnoremap <silent> ‚ :call<SID>MoveWindowToNextTab()<CR>
 
 function! <SID>MoveWindowToPrevTab()
     let l:fname = expand('%')
-    echom "fname: " . l:fname
+    " echom "fname: " . l:fname
     execute "tabprevious"
     execute "vs " . l:fname
     execute "tabnext"
@@ -131,4 +131,22 @@ function! <SID>MoveWindowToPrevTab()
 endfunction
 " Alt + 左小括号
 nnoremap <silent> · :call<SID>MoveWindowToPrevTab()<CR>
+
+function! <SID>TabBufOnly()
+    let l:fname = expand('%')
+    let l:win_list = range(1, winnr("$"))
+    for window_number in l:win_list
+        let l:bufnr = winbufnr(window_number)
+        if (bufloaded(l:bufnr) && buflisted(l:bufnr))
+            execute window_number . "wincmd w"
+            if expand('%') != l:fname
+                execute "q"
+            endif
+        endif
+    endfor
+endfunction
+
+command! TabBufOnly call <SID>TabBufOnly()
+
+
 
