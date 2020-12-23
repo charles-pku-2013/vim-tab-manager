@@ -82,17 +82,17 @@ function! <SID>SetMainWindow()
     " endfor
 endfunction
 
-function! <SID>ExchangeMainWindow()
-    execute "wincmd p"
-    call <SID>SetMainWindow()
-endfunction
-
-" function! <SID>ExchangeWindow()
-    " let l:cur_winwidth = winwidth(winnr())
-    " execute "wincmd x"
-    " execute "vertical res " . l:cur_winwidth
-    " call feedkeys("^")
+" function! <SID>ExchangeMainWindow()
+    " execute "wincmd p"
+    " call <SID>SetMainWindow()
 " endfunction
+
+function! <SID>ExchangeWindow()
+    let l:cur_winwidth = winwidth(winnr())
+    execute "wincmd x"
+    execute "vertical res " . l:cur_winwidth
+    call feedkeys("^")
+endfunction
 
 command Main call <SID>SetMainWindow()
 " command ExchangeMain call <SID>ExchangeMainWindow()
