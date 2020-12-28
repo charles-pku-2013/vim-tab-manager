@@ -56,6 +56,10 @@ function! <SID>GetMainWindow()
 endfunction
 
 function! <SID>SetMainWindow()
+    " current window buffer not listed like tagbar
+    if !buflisted(winbufnr(winnr()))
+        return
+    endif 
     let l:main_winnr = <SID>GetMainWindow()
     if l:main_winnr == winnr('$')
         return
@@ -88,6 +92,9 @@ endfunction
 " endfunction
 
 function! <SID>ExchangeWindow()
+    if !buflisted(winbufnr(winnr()))
+        return
+    endif 
     let l:cur_winwidth = winwidth(winnr())
     execute "wincmd x"
     execute "vertical res " . l:cur_winwidth
@@ -106,6 +113,9 @@ nmap <silent> Â ≈µ
 
 
 function! <SID>MoveWindowToNextTab()
+    if !buflisted(winbufnr(winnr()))
+        return
+    endif 
     let l:fname = expand('%')
     " echom "fname: " . l:fname
     execute "tabnext"
@@ -120,6 +130,9 @@ endfunction
 nnoremap <silent> ‚ :call<SID>MoveWindowToNextTab()<CR>
 
 function! <SID>MoveWindowToPrevTab()
+    if !buflisted(winbufnr(winnr()))
+        return
+    endif 
     let l:fname = expand('%')
     " echom "fname: " . l:fname
     execute "tabprevious"
