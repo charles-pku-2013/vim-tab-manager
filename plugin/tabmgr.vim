@@ -97,6 +97,9 @@ function! <SID>ExchangeWindow()
     endif 
     let l:cur_winwidth = winwidth(winnr())
     execute "wincmd x"
+    if !buflisted(winbufnr(winnr()))
+        return
+    endif 
     execute "vertical res " . l:cur_winwidth
     call feedkeys("^")
 endfunction
