@@ -35,8 +35,25 @@ function! <SID>CloseDupHelper()
 endfunction
 
 function! <SID>CloseDup()
+    let l:cur_bufid = bufnr()
+    let l:is_restore = buflisted(l:cur_bufid)
     while <SID>CloseDupHelper()
     endwhile
+    " goto current doc
+    if l:cur_bufid == bufnr() || !l:is_restore
+        return
+    endif
+    let l:tablist = range(1, tabpagenr("$"))
+    for tabnumber in l:tablist
+        let l:buflist = tabpagebuflist(tabnumber)
+        for bufid in l:buflist
+            if bufid == l:cur_bufid
+                execute "normal! " . tabnumber . "gt"
+                execute bufwinnr(l:cur_bufid) . "wincmd w"
+                return
+            endif
+        endfor
+    endfor
 endfunction
 
 " Close duplicate window
