@@ -16,13 +16,18 @@ function! <SID>CloseDupHelper()
         for bufid in l:buflist
             if (bufloaded(bufid) && buflisted(bufid))
                 let l:path = "#" . bufid . ":."
+                " get relative path of specified buf no
                 let l:path = expand(l:path)
+                " Insert to dict if not exist
                 if !has_key(l:file_dict, l:path)
                     let l:file_dict[l:path] = ''
                 else
+                    " Already open
                     execute "normal! " . tabnumber . "gt"
+                    " get window / split number of the buffer in this tab
                     let l:window_number = bufwinnr(bufid)
                     if (l:window_number >= 0)
+                        " goto split in this tab
                         execute l:window_number . "wincmd w"
                         execute "q"
                         return 1
@@ -43,6 +48,7 @@ function! <SID>CloseDup()
     if l:cur_bufid == bufnr() || !l:is_restore
         return
     endif
+    " go back to original position (tab and split)
     let l:tablist = range(1, tabpagenr("$"))
     for tabnumber in l:tablist
         let l:buflist = tabpagebuflist(tabnumber)
@@ -56,8 +62,19 @@ function! <SID>CloseDup()
     endfor
 endfunction
 
+function! <SID>CloseDupApi()
+    silent call <SID>CloseDup()
+    " Close tabs has only tagbar
+    for tabnumber in range(1, tabpagenr("$"))
+        let l:buflist = filter(tabpagebuflist(tabnumber), 'buflisted(v:val)')
+        if (len(l:buflist) == 0)
+            execute 'tabclose ' . tabnumber
+        endif
+    endfor
+endfunction
+
 " Close duplicate window
-command Cdw call <SID>CloseDup()
+command Cdw call <SID>CloseDupApi()
 
 function! <SID>GetMainWindow()
     let l:main_winnr = 1
@@ -76,7 +93,7 @@ function! <SID>SetMainWindow()
     " current window buffer not listed like tagbar
     if !buflisted(winbufnr(winnr()))
         return
-    endif 
+    endif
     let l:main_winnr = <SID>GetMainWindow()
     if l:main_winnr == winnr('$')
         return
@@ -111,12 +128,12 @@ endfunction
 function! <SID>ExchangeWindow()
     if !buflisted(winbufnr(winnr()))
         return
-    endif 
+    endif
     let l:cur_winwidth = winwidth(winnr())
     execute "wincmd x"
     if !buflisted(winbufnr(winnr()))
         return
-    endif 
+    endif
     execute "vertical res " . l:cur_winwidth
     call feedkeys("^")
 endfunction
@@ -131,11 +148,10 @@ nnoremap <silent> ≈ :call<SID>ExchangeWindow()<CR>
 " nnoremap <silent> Â :ExchangeMain<CR>
 nmap <silent> Â ≈µ
 
-
 function! <SID>MoveWindowToNextTab()
     if !buflisted(winbufnr(winnr()))
         return
-    endif 
+    endif
     let l:fname = expand('%')
     " echom "fname: " . l:fname
     execute "tabnext"
@@ -152,7 +168,7 @@ nnoremap <silent> ‚ :call<SID>MoveWindowToNextTab()<CR>
 function! <SID>MoveWindowToPrevTab()
     if !buflisted(winbufnr(winnr()))
         return
-    endif 
+    endif
     let l:fname = expand('%')
     " echom "fname: " . l:fname
     execute "tabprevious"
