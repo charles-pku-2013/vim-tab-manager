@@ -63,14 +63,29 @@ function! <SID>CloseDup()
 endfunction
 
 function! <SID>CloseDupApi()
+    " first close all quickfix windows
+    let l:qf_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val) && getbufvar(v:val, "&filetype") == "qf"')
+    if (len(l:qf_buffers))
+        execute 'bd ' . join(l:qf_buffers)
+    endif
+    " The main func
     silent call <SID>CloseDup()
     " Close tabs has only tagbar
-    for tabnumber in range(1, tabpagenr("$"))
-        let l:buflist = filter(tabpagebuflist(tabnumber), 'buflisted(v:val)')
-        if (len(l:buflist) == 0)
-            execute 'tabclose ' . tabnumber
-        endif
-    endfor
+    let g:goto_last_tab = 0
+    " NOTE 执行tabclose后tab序号列表会改变，不可以在循环里处理tabclose
+    let l:loop = 1
+    while l:loop
+        let l:loop = 0
+        for tabnumber in range(1, tabpagenr("$"))
+            let l:buflist = filter(tabpagebuflist(tabnumber), 'buflisted(v:val)')
+            if (len(l:buflist) == 0)
+                execute 'tabclose ' . tabnumber
+                let l:loop = 1
+                break
+            endif
+        endfor
+    endwhile
+    let g:goto_last_tab = 1
 endfunction
 
 " Close duplicate window
