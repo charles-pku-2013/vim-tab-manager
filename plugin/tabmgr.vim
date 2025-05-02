@@ -1,7 +1,8 @@
 function! <SID>CloseAndOpenInNewTab()
     let l:file = expand('%')
     execute 'q'
-    execute 'tabe ' . l:file
+    " TabDrop is in vim-bufmgr
+    execute 'TabDrop ' . l:file
 endfunction
 
 nnoremap <leader>tb :call <SID>CloseAndOpenInNewTab()<CR>
