@@ -6,7 +6,11 @@ function! <SID>CloseAndOpenInNewTab()
 endfunction
 
 nnoremap <leader>tb :call <SID>CloseAndOpenInNewTab()<CR>
-nnoremap <leader>ltb :call <SID>CloseAndOpenInNewTab()<CR>:tabm -1<CR>
+" Alt + t
+nnoremap † :call <SID>CloseAndOpenInNewTab()<CR>
+" nnoremap <leader>ltb :call <SID>CloseAndOpenInNewTab()<CR>:tabm -1<CR>
+" Shift + alt + t
+" nnoremap ˇ :call <SID>CloseAndOpenInNewTab()<CR>:tabm -1<CR>
 
 function! <SID>CloseDupHelper()
     let l:file_dict = {}
