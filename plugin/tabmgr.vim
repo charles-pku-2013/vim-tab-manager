@@ -62,7 +62,7 @@ function! <SID>CloseDup()
     endfor
 endfunction
 
-function! <SID>CloseDupApi()
+function! <SID>ArrangeTabs()
     " first close all quickfix windows
     let l:qf_buffers = filter(range(1, bufnr('$')), 'buflisted(v:val) && getbufvar(v:val, "&filetype") == "qf"')
     if (len(l:qf_buffers))
@@ -89,7 +89,7 @@ function! <SID>CloseDupApi()
 endfunction
 
 " Close duplicate window
-command Cdw call <SID>CloseDupApi()
+command At call <SID>ArrangeTabs()
 
 function! <SID>GetMainWindow()
     let l:main_winnr = 1
