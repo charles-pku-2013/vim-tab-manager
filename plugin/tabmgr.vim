@@ -1,6 +1,6 @@
 function! <SID>CloseAndOpenInNewTab()
     let l:file = expand('%')
-    execute 'q'
+    execute 'bd'
     " TabDrop is in vim-bufmgr
     execute 'TabDrop ' . l:file
 endfunction
@@ -84,12 +84,18 @@ function! <SID>ArrangeTabs()
         for tabnumber in range(1, tabpagenr("$"))
             let l:buflist = filter(tabpagebuflist(tabnumber), 'buflisted(v:val)')
             if (len(l:buflist) == 0)
+                " No buf in this tab, then close this tab
                 execute 'tabclose ' . tabnumber
                 let l:loop = 1
                 break
             endif
         endfor
     endwhile
+    " close all not loaded (shown) buffers
+    let l:hidden_bufs = filter(range(1, bufnr('$')), 'buflisted(v:val) && !bufloaded(v:val)')
+    if (len(l:hidden_bufs))
+        execute 'bd ' . join(l:hidden_bufs)
+    endif
     let g:goto_last_tab = 1
 endfunction
 
