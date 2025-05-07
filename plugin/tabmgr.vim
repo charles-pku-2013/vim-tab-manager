@@ -152,27 +152,48 @@ endfunction
 " endfunction
 
 function! <SID>ExchangeWindow()
+    " skip not listed like tagbar
     if !buflisted(winbufnr(winnr()))
         return
     endif
+    " get current (main) window size
     let l:cur_winwidth = winwidth(winnr())
+    " vim original exchange
     execute "wincmd x"
+    " if jumped to tagbar, abort
     if !buflisted(winbufnr(winnr()))
         return
     endif
+    " set window size
     execute "vertical res " . l:cur_winwidth
+    " jump to line beginning
     call feedkeys("^")
+endfunction
+
+function! <SID>ReopenInSplit(cmd)
+    let l:buflist = filter(tabpagebuflist(tabpagenr()), 'buflisted(v:val)')
+    if (len(l:buflist) <= 1)
+        return
+    endif
+
+    let l:fname = expand('%')
+    bd
+    execute a:cmd . " " . l:fname
 endfunction
 
 command Main call <SID>SetMainWindow()
 " command ExchangeMain call <SID>ExchangeMainWindow()
-" Alt -m
+" Alt + m
 nnoremap <silent> µ :Main<CR>
-" Alt - x
-nnoremap <silent> ≈ :call<SID>ExchangeWindow()<CR>
-" Shift - Alt - m
+" Alt + x
+nnoremap <silent> ≈ :call <SID>ExchangeWindow()<CR>
+" Shift + Alt + m
 " nnoremap <silent> Â :ExchangeMain<CR>
 nmap <silent> Â ≈µ
+" Alt + v Reopen in vertical split
+nnoremap <silent> √ :call <SID>ReopenInSplit("vs")<CR>
+" Alt + s Reopen in horizontal split
+nnoremap <silent> ß :call <SID>ReopenInSplit("sp")<CR>
 
 function! <SID>MoveWindowToNextTab()
     if !buflisted(winbufnr(winnr()))
