@@ -199,15 +199,24 @@ function! <SID>MoveWindowToNextTab()
     if !buflisted(winbufnr(winnr()))
         return
     endif
+    let l:tabnr = tabpagenr()
+    if l:tabnr >= tabpagenr('$')
+        return
+    endif
+    let g:goto_last_tab = 0
+    " get succeeding tab
+    let l:tabnr = l:tabnr + 1
     let l:fname = expand('%')
     " echom "fname: " . l:fname
-    execute "tabnext"
+    " goto succeeding tab and open file
+    execute "normal! " . l:tabnr . "gt"
     execute "vs " . l:fname
+    " close original split
     execute "tabprevious"
     execute "q"
-    if expand('%') != l:fname
-        execute "tabnext"
-    endif
+    execute "TabDrop " . l:fname
+    let g:goto_last_tab = 1
+    execute "At"
 endfunction
 " Alt + 右小括号
 nnoremap <silent> ‚ :call<SID>MoveWindowToNextTab()<CR>
@@ -216,15 +225,21 @@ function! <SID>MoveWindowToPrevTab()
     if !buflisted(winbufnr(winnr()))
         return
     endif
-    let l:fname = expand('%')
-    " echom "fname: " . l:fname
-    execute "tabprevious"
-    execute "vs " . l:fname
-    execute "tabnext"
-    execute "q"
-    if expand('%') != l:fname
-        execute "tabprevious"
+    let l:tabnr = tabpagenr()
+    if l:tabnr <= 1
+        return
     endif
+    let g:goto_last_tab = 0
+    " get preceding tab
+    let l:tabnr = l:tabnr - 1
+    let l:fname = expand('%')
+    " close current split
+    execute "q"
+    " goto preceding tab and open file
+    execute "normal! " . l:tabnr . "gt"
+    execute "vs " . l:fname
+    let g:goto_last_tab = 1
+    execute "At"
 endfunction
 " Alt + 左小括号
 nnoremap <silent> · :call<SID>MoveWindowToPrevTab()<CR>
