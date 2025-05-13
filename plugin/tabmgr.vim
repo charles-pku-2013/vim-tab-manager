@@ -187,6 +187,8 @@ command Main call <SID>SetMainWindow()
 nnoremap <silent> µ :Main<CR>
 " Alt + x
 nnoremap <silent> ≈ :call <SID>ExchangeWindow()<CR>
+" Alt + w
+nmap <silent> ∑ <C-w>x<C-w>p
 " Shift + Alt + m
 " nnoremap <silent> Â :ExchangeMain<CR>
 nmap <silent> Â ≈µ
